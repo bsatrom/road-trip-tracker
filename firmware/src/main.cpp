@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include <Notecard.h>
 #include "SparkFunCCS811.h"
 #include "SparkFunBME280.h"
@@ -24,10 +25,10 @@ void setup() {
   Serial.println("=========================================");
 
   notecard.setDebugOutputStream(Serial);
-  
+
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
-  
+
   tempSensor.settings.commInterface = I2C_MODE;
   tempSensor.settings.I2CAddress = 0x77;
   tempSensor.settings.runMode = 3; //Normal mode
@@ -54,18 +55,18 @@ void setup() {
     Serial.println("CCS811 Connected.");
     airQualitySensorAvailable = true;
   }
-  
+
   J *req = notecard.newRequest("hub.set");
   JAddStringToObject(req, "product", PRODUCT_UID);
   JAddStringToObject(req, "sn", "feather-tracker");
   JAddStringToObject(req, "mode", "periodic");
-  
+
   notecard.sendRequest(req);
 
   req = notecard.newRequest("card.location.mode");
   JAddStringToObject(req, "mode", "periodic");
   JAddNumberToObject(req, "seconds", 300);
-  
+
   notecard.sendRequest(req);
 
   req = notecard.newRequest("card.location.track");
@@ -73,11 +74,11 @@ void setup() {
   JAddBoolToObject(req, "heartbeat", true);
   JAddBoolToObject(req, "sync", true);
   JAddNumberToObject(req, "hours", 4);
-  
+
   notecard.sendRequest(req);
 
   delay(1000);
-  
+
   digitalWrite(LED_BUILTIN, LOW);
 }
 
@@ -95,20 +96,20 @@ void loop() {
       float alt = tempSensor.readFloatAltitudeFeet();
 
       airQualitySensor.setEnvironmentalData(humid, tempC);
-        
+
       Serial.print("Humidity: ");
       Serial.print(humid, 0);
-    
+
       Serial.print(" Pressure: ");
       Serial.print(pressure, 0);
-    
+
       Serial.print(" Alt: ");
       Serial.print(alt, 1);
-    
+
       Serial.print(" Temp: ");
       Serial.print(tempF, 2);
       Serial.println();
-  
+
       J *req = notecard.newRequest("note.add");
       if (req != NULL) {
           JAddBoolToObject(req, "sync", true);
@@ -123,8 +124,8 @@ void loop() {
           }
           notecard.sendRequest(req);
       }
-    } 
-    
+    }
+
     if(airQualitySensorAvailable) {
       if (airQualitySensor.dataAvailable()) {
         airQualitySensor.readAlgorithmResults();
@@ -140,7 +141,7 @@ void loop() {
         Serial.print(millis());
         Serial.print("]");
         Serial.println();
-        
+
         J *req = notecard.newRequest("note.add");
         if (req != NULL) {
             JAddBoolToObject(req, "sync", true);
@@ -155,7 +156,7 @@ void loop() {
         }
       }
     }
-    
+
     startMillis = currentMillis;
   }
 }
