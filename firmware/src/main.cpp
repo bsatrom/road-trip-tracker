@@ -21,8 +21,8 @@ bool tempSensorAvailable = false;
 void setup() {
   Serial.begin(115200);
   delay(2500);
-  Serial.println("Blues Road Trip Tracker - Feather Edition");
-  Serial.println("=========================================");
+  Serial.println("Blues Holiday Road Trip Tracker");
+  Serial.println("===============================");
 
   notecard.setDebugOutputStream(Serial);
 

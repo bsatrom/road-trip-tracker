@@ -1,11 +1,9 @@
 import streamlit as st
-import json
 import pandas as pd
 import snowflake.connector
-import matplotlib
 
 """
-# Blues Tracker Demo!
+# Blues Holiday Road Trip Tracker Demo!
 
 This demo pulls data from Snowflake that was routed from [this Notehub project](https://notehub.io/project/app:6e153550-c690-4a7d-ba00-ed6056138574).
 
@@ -24,9 +22,9 @@ events.
 """
 num_rows = st.slider('Rows to fetch?', 10, 500, 100)
 sort = st.selectbox('Sort?',('asc', 'desc'))
-show_table_data = st.checkbox('Show table data?', False)
+show_map = st.checkbox('Show map?', True)
 show_charts = st.checkbox('Show charts?', True)
-show_map = st.checkbox('Show map?', False)
+show_table_data = st.checkbox('Show table data?', False)
 
 # Initialize connection.
 @st.experimental_singleton
@@ -52,18 +50,14 @@ env_rows = run_query(f'SELECT * from env_vw ORDER BY created {sort} LIMIT {num_r
 
 env_data = pd.DataFrame(env_rows, columns=("Device", "When", "Loc", "Lat", "Lon", "Location", "Location Type", "Timezone", "Country", "Temp", "Humidity", "Pressure", "Altitude"))
 
-if show_table_data:
+if show_map:
     """
-    ## Notecard `air.qo` Events
-    """
-
-    air_data[air_data.columns[::-1]]
-
-    """
-    ## Notecard `env.qo` Events
+    ### Tracker Map
     """
 
-    env_data[env_data.columns[::-1]]
+    tracker_locations = tracker_data[["lat", "lon"]]
+
+    st.map(tracker_locations)
 
 if show_charts:
     """
@@ -79,11 +73,15 @@ if show_charts:
     env_group2 = env_data[["Temp", "Humidity"]]
     st.line_chart(env_group2)
 
-if show_map:
+if show_table_data:
     """
-    ### Tracker Map
+    ## Notecard `air.qo` Events
     """
 
-    tracker_locations = tracker_data[["lat", "lon"]]
+    air_data[air_data.columns[::-1]]
 
-    st.map(tracker_locations)
+    """
+    ## Notecard `env.qo` Events
+    """
+
+    env_data[env_data.columns[::-1]]
