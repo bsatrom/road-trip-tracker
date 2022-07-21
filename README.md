@@ -9,5 +9,5 @@ The full project writeup is [on Hackster.io](https://hackster.io/blues-wireless)
 
 This repository contains the complete source for this project, including:
 
-- [Firmware](firmware/src/main.cpp) (Using Platform.io) for the Blues Swan connected to a Notecard via the Notecarrier-F](https://shop.blues.io/products/carr-f).
+- [Firmware](firmware/src/main.cpp) (Using Platform.io) for the Blues Swan connected to a Notecard via the [Notecarrier-F](https://shop.blues.io/products/carr-f).
 - A [Streamlit.io](https://streamlit.io) [application](dashboard/streamlit_app.py) for fetching data from Snowflake and displaying charts, graphs, and a map.
